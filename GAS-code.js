@@ -52,5 +52,74 @@ function saveAttachment(){
     }
   }
   listFilesInFolder(folderID)
+}
+
+function listFilesInFolder(folderID) {
+  var folder = DriveApp.getFolderById(folderID); 
+  var filer = folder.getFiles();
+  while(filer.hasNext()){
+    var filen = filer.next();
+    var filID = filen.getId();
+    Logger.log(filen + filID)
+    xmlinnhold(filID);
+  }
+}
+
+function xmlinnhold(filID){ 
+  var arkivmappe = ''; //archive folder ID
+  var regnearkID = ''; // Google sheet ID
+  var regneark = SpreadsheetApp.openById(regnearkID);
+  Logger.log(regneark)
+  var sheet = regneark.getSheetByName('report');
+  Logger.log(filID)
+     var data = DriveApp.getFileById(filID).getBlob().getDataAsString();
+     var xml = XmlService.parse(data);
+     var root = xml.getRootElement();
+
+     var metadata = root.getChild("report_metadata");
+     var email = metadata.getChild("report_id").getValue();
+     var reportID = metadata.getChild("email").getValue();
+     var datorom = metadata.getChild("date_range");
+     var start = new Date(datorom.getChild("begin").getValue()*1000);
+     var slutt = new Date(datorom.getChild("end").getValue()*1000);
+
+     Logger.log(email)
+
+     var records = root.getChildren("record");
+
+     for(i in records){
+      record = records[i];
+      Logger.log(record);
+      var rad = record.getChild("row");
+      var ip = rad.getChild("source_ip").getValue();
+      var antall = rad.getChild("count").getValue();
+      var evaluering = rad.getChild("policy_evaluated");
+
+      var disp = evaluering.getChild("disposition").getValue();
+      var dkimpass = evaluering.getChild("dkim").getValue();
+      var spfverdi = evaluering.getChild("spf").getValue();
+      
+      var fra = record.getChild("identifiers").getChild("header_from");
+
+      var ar = record.getChild("auth_results");
+      var dkim = ar.getChild("dkim");
+      Logger.log(dkim)
+      if(dkim != null){
+        var dkimDomain = dkim.getChild("domain").getValue();
+        var dkimResult = dkim.getChild("result").getValue();
+        var dkimSelector = dkim.getChild("selector").getValue();
+      }
+      
+      var spf = ar.getChild("spf");
+      var spfDomain = spf.getChild("domain").getValue();
+      var spfResult = spf.getChild("result").getValue();
+
+      sheet.appendRow([reportID,email,start,slutt,ip,antall,disp,dkimpass,spfverdi,dkimDomain,dkimResult,dkimSelector,spfDomain,spfResult]);
+      
+      Logger.log(ip)
+      var file = DriveApp.getFileById(filID);
+      var folder = DriveApp.getFolderById(arkivmappe);
+      file.moveTo(folder);
+     }   
 
 }
