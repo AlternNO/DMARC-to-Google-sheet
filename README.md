@@ -1,5 +1,5 @@
 # DMARC-to-Google-sheet
-In Gmail: Save attachments that are DMARC-reports and insert values from them in Google sheet
+In Gmail: Save attachments that are DMARC-reports and insert values from them in Google sheet. The reports are in XML-format. 
 
 ## Preparations in Google Drive
 1. Create a folder and call it DMARC
