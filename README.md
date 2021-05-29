@@ -10,6 +10,7 @@ https://docs.google.com/spreadsheets/d/10crRusmMwmcTuiUMn0jwFRHSotbXXrNTRTPcx4hJ
 ## Create the script
 Go to https://script.google.com/home
 Click *New project* 
+
 ![bilde](https://user-images.githubusercontent.com/50026860/120083438-f87f0c00-c0c8-11eb-8398-d2543a135e13.png)
 
 Give the project a name (change the Untitled project)
@@ -21,5 +22,6 @@ Go to Triggers and Add Trigger
 ![bilde](https://user-images.githubusercontent.com/50026860/120083982-da1b0f80-c0cc-11eb-87ba-e992c19d5919.png)
 
 Change it settings so the script is trigged for instance once a day. 
+
 ![bilde](https://user-images.githubusercontent.com/50026860/120084012-2b2b0380-c0cd-11eb-8589-9271cc9f9d7e.png)
 
